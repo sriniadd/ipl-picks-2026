@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
 import { formatDate } from '@/lib/utils'
 import type { MatchWithTeams } from '@/types'
 
-export default function AdminPage() {
+function AdminContent() {
   const searchParams = useSearchParams()
   const adminKey = searchParams.get('key')
   const [authorized, setAuthorized] = useState(false)
@@ -17,14 +17,12 @@ export default function AdminPage() {
   const supabase = createClient()
 
   useEffect(() => {
-    // Check if admin key is valid
     const checkAuth = async () => {
       if (!adminKey) {
         setLoading(false)
         return
       }
 
-      // Verify key against environment variable via API
       const res = await fetch(`/api/admin/verify?key=${encodeURIComponent(adminKey)}`)
       const { valid } = await res.json()
 
@@ -124,7 +122,6 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* Pending Results */}
       <section className="mb-8">
         <h2 className="text-xl font-bold text-gray-700 mb-4">Matches Needing Results</h2>
         {pendingMatches.length === 0 ? (
@@ -177,7 +174,6 @@ export default function AdminPage() {
         )}
       </section>
 
-      {/* Completed Matches */}
       <section>
         <h2 className="text-xl font-bold text-gray-700 mb-4">Completed Matches</h2>
         {completedMatches.length === 0 ? (
@@ -211,5 +207,17 @@ export default function AdminPage() {
         )}
       </section>
     </div>
+  )
+}
+
+export default function AdminPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex justify-center items-center min-h-[400px]">
+        <div className="text-gray-500">Loading...</div>
+      </div>
+    }>
+      <AdminContent />
+    </Suspense>
   )
 }

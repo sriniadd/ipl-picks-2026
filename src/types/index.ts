@@ -16,7 +16,7 @@ export interface Match {
   status: 'upcoming' | 'live' | 'completed';
   team1?: Team;
   team2?: Team;
-  winner?: Team;
+  winner?: Team | null;
 }
 
 export interface Pick {

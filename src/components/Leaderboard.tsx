@@ -36,7 +36,7 @@ export default function Leaderboard({ entries }: LeaderboardProps) {
               return (
                 <tr
                   key={entry.display_name}
-                  className={`border-b ${index < 3 ? 'bg-yellow-50' : ''}`}
+                  className={`border-b text-gray-900 ${index < 3 ? 'bg-yellow-50' : 'bg-white'}`}
                 >
                   <td className="px-4 py-3">
                     <span className={`
